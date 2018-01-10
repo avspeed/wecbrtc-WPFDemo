@@ -1,0 +1,8 @@
+﻿<Window x:Class="AppRTCDemo.PeerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PeerWindow" Height="300" Width="300">
+    <Grid Name="gridViewer">
+        
+    </Grid>
+</Window>

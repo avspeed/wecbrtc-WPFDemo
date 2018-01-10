@@ -1,0 +1,151 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:AppRTCDemo"
+        xmlns:properties="clr-namespace:AppRTCDemo.Properties"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="MainWindow1" mc:Ignorable="d" x:Class="AppRTCDemo.MainWindow"
+        Title="AVSPEED iConfRTC Demo" Height="708.209" Width="830.97" Icon="resources/1437903597_integrated_webcam.png" Closing="MainWindow1_Closing">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+
+    <Grid  HorizontalAlignment="Stretch"   VerticalAlignment="Stretch" >
+
+        <Grid x:Name="gridBigVideo" HorizontalAlignment="Stretch"   VerticalAlignment="Stretch"  >
+            <Grid.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=gridLanding, Path=Visibility}" Value="Visible">
+                            <Setter Property="Grid.Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <WrapPanel Orientation="Horizontal" Name="videoList">
+                </WrapPanel>
+            <Grid x:Name="gridOptions"  Panel.ZIndex="999999" HorizontalAlignment="Left" Height="270" Margin="10,10,0,0" VerticalAlignment="Top" Width="100">
+                <Image Name="imgMuteAudio"   HorizontalAlignment="Left" Height="48" Margin="28,81,0,0" VerticalAlignment="Top" Width="48" Source="resources/microphone-48.png" Cursor="Hand"   ToolTip="Mute/Unmute mic"/>
+                <Image Name="imgMuteVideo"   HorizontalAlignment="Left" Height="48" Margin="28,10,0,0" VerticalAlignment="Top" Width="48" Source="resources/video-camera-48.png" Cursor="Hand"  ToolTip="Mute/Unmute camera"/>
+                <Image Name="imgChat" HorizontalAlignment="Left" Height="48" Margin="28,144,0,0" VerticalAlignment="Top" Width="48" Source="resources/speech-bubble.png"  ToolTip="Chat" Cursor="Hand"/>
+                <Image x:Name="imgLeave" HorizontalAlignment="Left" Height="48" Margin="28,208,0,0" VerticalAlignment="Top" Width="48" Source="resources/exit.png" Cursor="Hand"  ToolTip="Leave meeting"/>
+
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Visibility" Value="Hidden" />
+                        <Style.Triggers>
+                            <DataTrigger Value="True">
+                                <DataTrigger.Binding>
+                                    <Binding ElementName="gridBigVideo" Path="IsMouseOver" />
+                                </DataTrigger.Binding>
+                                <DataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger.Setters>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+
+            <Grid x:Name="gridChat" Visibility="{Binding ShowChat, Converter={StaticResource BoolToVis}}" Panel.ZIndex="999999" HorizontalAlignment="Left" Height="214" Margin="30,285,0,0" VerticalAlignment="Top" Width="247" >
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="tt"/>
+                </Grid.RenderTransform>
+                <DockPanel LastChildFill="True">
+                    <TextBox Name="chatText" Height="26" TextWrapping="Wrap" Text="Type here" DockPanel.Dock="Bottom" VerticalAlignment="Top" BorderThickness="2" GotFocus="chatText_GotFocus" LostFocus="chatText_LostFocus" KeyUp="chatText_KeyUp"/>
+                    <TextBox x:Name="chatLog" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" Text="" Background="#FFF3F3F3" BorderThickness="2" IsReadOnly="True"/>
+                </DockPanel>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="gridLanding" Panel.ZIndex="1" HorizontalAlignment="Center"  Height="209" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="134,256,106,213" Width="583">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="163*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="134*"/>
+                <ColumnDefinition Width="137*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="86*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtMeetingID" IsEnabled="{Binding WebRTCInitialized}" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="200" KeyUp="txtMeetingID_KeyUp" Grid.ColumnSpan="3" FontSize="18.667" Margin="22,96,79,71"  Background="White" Grid.Column="1" MaxLength="25">
+                <TextBox.Text>
+                    <Binding Path="MeetingID" UpdateSourceTrigger="PropertyChanged" >
+                        <Binding.ValidationRules>
+                            <local:TextBoxNotEmptyValidationRule x:Name="MeetingIDValidation" ValidatesOnTargetUpdated="True"
+                                                             Message="You must join a meeting."/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Button x:Name="btnJoinMeeting"  Content="Join Meeting" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Width="200"  Background="#FF2033AA" Height="40" Foreground="White" Click="btnJoinMeeting_Click" Grid.ColumnSpan="3" FontSize="18.667" Margin="22,0,79,2" Grid.Column="1">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="IsEnabled" Value="false" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ElementName=txtUserName, Path=(Validation.HasError)}" Value="false" />
+                                    <Condition Binding="{Binding ElementName=txtMeetingID, Path=(Validation.HasError)}" Value="false" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="IsEnabled" Value="true" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <TextBox x:Name="txtUserName" IsEnabled="{Binding WebRTCInitialized}"  BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="200" KeyUp="txtMeetingID_KeyUp" Grid.ColumnSpan="3" FontSize="18.667" Margin="22,28,79,139"  Grid.Column="1" MaxLength="25">
+
+
+
+                <TextBox.Text>
+
+
+                    <Binding Path="UserName" UpdateSourceTrigger="PropertyChanged" >
+                        <Binding.ValidationRules>
+                            <local:TextBoxNotEmptyValidationRule x:Name="UserNameValidation" ValidatesOnTargetUpdated="True"
+                                                             Message="You must enter a user name."/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label x:Name="label" Content="Your Name" Margin="122,28,0,0" VerticalAlignment="Top" FontSize="18.667" HorizontalAlignment="Left" Width="113" Grid.ColumnSpan="2"/>
+            <Label x:Name="label_Copy" Content="Meeting ID" HorizontalAlignment="Left" Margin="121,94,0,0" VerticalAlignment="Top" FontSize="18.667" Grid.ColumnSpan="2"/>
+        </Grid>
+
+        <Grid x:Name="gridSettings" Visibility="{Binding ShowSettings, Converter={StaticResource BoolToVis}}" Panel.ZIndex="1" HorizontalAlignment="Right"  Height="131" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Margin="0,62,0,0" Width="517">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="163*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="134*"/>
+                <ColumnDefinition Width="137*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="86*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtSignaling" Text="{Binding Source={x:Static properties:Settings.Default},
+                               Path=SignalingUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="384" Grid.ColumnSpan="4" FontSize="18.667" Margin="93,10,23,81"  Background="White">
+               
+            </TextBox>
+            <Label x:Name="lblSig" Content="Signaling Url" HorizontalAlignment="Left" Margin="-4,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" Height="59"  VerticalAlignment="Top" Background="#FF214B87" Name="gridHead">
+            <Label Content="AVSPEED iConfRTC Demo"  VerticalAlignment="Top" FontSize="29.333"  Foreground="White" HorizontalAlignment="Center"/>
+            <Image x:Name="imgSettings" Margin="0,0,14,7" Source="resources/settings2.png" Stretch="Fill" HorizontalAlignment="Right" VerticalAlignment="Center" Height="32" RenderTransformOrigin="-0.512,0" Width="32" Cursor="Hand"/>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" Panel.ZIndex="999999999" Height="59"  VerticalAlignment="Top" Background="#FF36992C" x:Name="gridMessage" Visibility="Hidden">
+            <Label Name="lblMessage" Content="&#xD;&#xA;"  VerticalAlignment="Top" FontSize="29.333"  Foreground="White" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Grid Name="gridPeers" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="150">
+            <WrapPanel FlowDirection="RightToLeft" Name="wrapPeers" HorizontalAlignment="Stretch" Height="150"  VerticalAlignment="Bottom">
+
+            </WrapPanel>
+        </Grid>
+    </Grid>
+
+</Window>
