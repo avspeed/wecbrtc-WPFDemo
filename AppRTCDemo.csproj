@@ -128,13 +128,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\Command.cs" />
-    <Compile Include="Const.cs" />
-    <Compile Include="Converters.cs" />
-    <Compile Include="ErrorCollectionToVisibility.cs" />
-    <Compile Include="CustomAdorner.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="Helper\Const.cs" />
+    <Compile Include="Helper\Converters.cs" />
+    <Compile Include="Helper\ErrorCollectionToVisibility.cs" />
+    <Compile Include="Helper\CustomAdorner.cs" />
+    <Compile Include="Model\Model.cs" />
     <Compile Include="Model\AppModel.cs" />
-    <Compile Include="ValidationRules.cs" />
+    <Compile Include="Helper\ValidationRules.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -143,7 +143,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helper.cs" />
+    <Compile Include="Helper\Helper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
