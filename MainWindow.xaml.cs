@@ -52,7 +52,7 @@ namespace AppRTCDemo
             RTC.Init();
 
             rtcControl = new RTCControl();
-
+            
             currParticipants = new List<CurrentParticipants>();
 
             ////setup events
@@ -73,7 +73,7 @@ namespace AppRTCDemo
 
             model.PropertyChanged += Model_PropertyChanged;
 
-            //model.PropertyChanged += Model_PropertyChanged;
+            model.AppTitle = Const.title;
 
             
             ///set the initial signaling url .. this is where our signalr server is running from
@@ -109,7 +109,8 @@ namespace AppRTCDemo
 
         private void RtcControl_IJoinedMeeting(object sender, UserArgs e)
         {
-           
+
+            model.AppTitle = Const.title + " - In Meeting " + e.MeetingID;
             ShowMessage("Welcome to Meeting : " + e.MeetingID, System.Windows.Media.Brushes.DarkSlateBlue, true);
 
             AttachLoadingAdorner(rtcControl, e.UserName);
@@ -164,7 +165,7 @@ namespace AppRTCDemo
             rtcControl.Visibility = System.Windows.Visibility.Hidden;
             gridLanding.Visibility = System.Windows.Visibility.Visible;
             gridHead.Visibility = System.Windows.Visibility.Visible;
-
+            model.AppTitle = Const.title;
             ShowMessage("You left the Meeting : " + e.MeetingID);
         }
 
