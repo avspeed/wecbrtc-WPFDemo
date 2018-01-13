@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:AppRTCDemo"
         xmlns:properties="clr-namespace:AppRTCDemo.Properties"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="MainWindow1" mc:Ignorable="d" x:Class="AppRTCDemo.MainWindow"
-        Title="{Binding AppTitle}" Height="708.209" Width="830.97" Icon="resources/1437903597_integrated_webcam.png" Closing="MainWindow1_Closing">
+        Title="{Binding AppTitle}" Height="708.209" Width="830.97" Icon="resources/1437903597_integrated_webcam.png" Closing="MainWindow_Closing">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -135,7 +135,7 @@
 
         <Grid HorizontalAlignment="Stretch" Height="59"  VerticalAlignment="Top" Background="#FF214B87" Name="gridHead">
             <Label Content="AVSPEED iConfRTC Demo"  VerticalAlignment="Top" FontSize="29.333"  Foreground="White" HorizontalAlignment="Center"/>
-            <Image x:Name="imgSettings" Margin="0,0,14,7" Source="resources/settings2.png" Stretch="Fill" HorizontalAlignment="Right" VerticalAlignment="Center" Height="32" RenderTransformOrigin="-0.512,0" Width="32" Cursor="Hand"/>
+            <Image x:Name="imgSettings" Margin="0,0,14,7" Source="resources/settings2.png" Stretch="Fill" HorizontalAlignment="Right" VerticalAlignment="Center" Height="32" RenderTransformOrigin="-0.512,0" Width="32" Cursor="Hand" Visibility="Hidden"/>
         </Grid>
         <Grid HorizontalAlignment="Stretch" Panel.ZIndex="999999999" Height="59"  VerticalAlignment="Top" Background="#FF36992C" x:Name="gridMessage" Visibility="Hidden">
             <Label Name="lblMessage" Content="&#xD;&#xA;"  VerticalAlignment="Top" FontSize="29.333"  Foreground="White" HorizontalAlignment="Center"/>

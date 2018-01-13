@@ -40,22 +40,25 @@ namespace AppRTCDemo
         /// <summary>
         /// the iConfRTC Control
         /// </summary>
-        RTCControl rtcControl;
+        private RTCControl rtcControl;
 
         protected List<CurrentParticipants> currParticipants;
+
+        private List<CustomAdorner> adorners;
 
 
         public MainWindow()
         {
             InitializeComponent();
 
+            // !!we initialize webrtc - mandatory call!!
             RTC.Init();
 
             rtcControl = new RTCControl();
             
             currParticipants = new List<CurrentParticipants>();
 
-            ////setup events
+            //assign iConfRTC events
             rtcControl.ErrorConnectSignaling += RtcControl_ErrorConnectSignaling;
             rtcControl.ConnectedToSignaling += RtcControl_ConnectedToSignaling;
             rtcControl.RTCInitialized += WebRTCInitialized;
@@ -65,18 +68,16 @@ namespace AppRTCDemo
             rtcControl.IJoinedMeeting += RtcControl_IJoinedMeeting;
             rtcControl.MeetingMessageReceived += RtcControl_MeetingMessageReceived;
 
-            //Closing += MainWindow_Closing;
-
             model = new AppModel();
 
-            this.DataContext = model;
+            DataContext = model;
 
             model.PropertyChanged += Model_PropertyChanged;
 
             model.AppTitle = Const.title;
 
             
-            ///set the initial signaling url .. this is where our signalr server is running from
+            //set the initial signaling url .. this is where our signalr server is running from
             model.SignalingUrl = System.Configuration.ConfigurationManager.AppSettings["SignalingUrl"];
 
             rtcControl.SignalingType = SignalingTypes.Socketio;//SignalingTypes.SignalR; // SignalingTypes.Socketio;
@@ -92,20 +93,11 @@ namespace AppRTCDemo
             //we add our own video to the list of videos
             videoList.Children.Add(rtcControl);
 
-            //we initialize webrtc - mandatory call!
+            
         }
 
-        private void AttachLoadingAdorner( UIElement el, string textToDisplay)
-        {
-            CustomAdorner loading = new CustomAdorner(el);
-            loading.FontSize = 15;
-            loading.OverlayedText = textToDisplay;
-            
-            loading.Typeface = new Typeface(FontFamily, FontStyles.Normal,
-                FontWeights.Bold, FontStretch);
-            
-            AdornerLayer.GetAdornerLayer(el).Add(loading);
-        }
+      
+        #region iConfRTC Event Handlers
 
         private void RtcControl_IJoinedMeeting(object sender, UserArgs e)
         {
@@ -113,7 +105,7 @@ namespace AppRTCDemo
             model.AppTitle = Const.title + " - In Meeting " + e.MeetingID;
             ShowMessage("Welcome to Meeting : " + e.MeetingID, System.Windows.Media.Brushes.DarkSlateBlue, true);
 
-            AttachLoadingAdorner(rtcControl, e.UserName);
+            AttachLoadingAdorner(rtcControl, e.UserName, e.Session);
 
             //start viewing sessions other than e.Session whcih is my session
 
@@ -123,7 +115,20 @@ namespace AppRTCDemo
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-           
+
+        }
+
+        private void WebRTCInitialized(object sender)
+        {
+            //you can add a turn server here
+            //rtcControl.AddIceServer(url: "numb.viagenie.ca", userName: "support@avspeed.com", password: "avspeedwebrtc", clearFirst: false, type: "turn");
+
+            model.WebRTCInitialized = true;
+            HideMessage();
+
+            rtcControl.SetMutePoster(Const.imageAway);
+
+            //rtcControl.AddIceServer("stun.voiparound.com");
         }
 
         private void RtcControl_ConnectedToSignaling(object sender, string hubId)
@@ -131,23 +136,23 @@ namespace AppRTCDemo
             ShowMessage("Connected To Signaling..", brush: System.Windows.Media.Brushes.Green, stay: false, fontSize: 14);
 
             //move to second screen
-               rtcControl.Visibility = System.Windows.Visibility.Visible;
+            rtcControl.Visibility = System.Windows.Visibility.Visible;
             gridLanding.Visibility = System.Windows.Visibility.Hidden;
             gridHead.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void RtcControl_ErrorConnectSignaling(object sender, string error)
         {
-            ShowMessage("Error connecting to Signaling server. : " + error, brush: System.Windows.Media.Brushes.IndianRed, stay:false, fontSize:14);
+            ShowMessage("Error connecting to Signaling server. : " + error, brush: System.Windows.Media.Brushes.IndianRed, stay: false, fontSize: 14);
         }
 
 
         private void RtcControl_MeetingMessageReceived(object sender, MeetingMessageEventArgs e)
         {
-               if (!gridChat.IsVisible)
-                   gridChat.Visibility = System.Windows.Visibility.Visible;
+            if (!gridChat.IsVisible)
+                gridChat.Visibility = System.Windows.Visibility.Visible;
 
-              chatLog.AppendText(e.FromUser + " : " + e.Message + Environment.NewLine);
+            chatLog.AppendText(e.FromUser + " : " + e.Message + Environment.NewLine);
         }
 
         private void RtcControl_ILeftMeeting(object sender, UserArgs e)
@@ -156,6 +161,7 @@ namespace AppRTCDemo
             foreach (var item in currParticipants)
             {
                 var viewerControl = item.Viewer;
+
                 videoList.Children.RemoveAt(item.ElementPosition);
                 viewerControl = null;
             }
@@ -166,21 +172,62 @@ namespace AppRTCDemo
             gridLanding.Visibility = System.Windows.Visibility.Visible;
             gridHead.Visibility = System.Windows.Visibility.Visible;
             model.AppTitle = Const.title;
+            RemoveAdorner(rtcControl, e.Session);
             ShowMessage("You left the Meeting : " + e.MeetingID);
         }
 
         private void RtcControl_UserLeftMeeting(object sender, UserArgs e)
         {
+
             var viewerControl = currParticipants.First(participant => participant.Session == e.Session).Viewer;
+            RemoveAdorner(rtcControl, e.Session);
             videoList.Children.RemoveAt(currParticipants.First(participant => participant.Session == e.Session).ElementPosition);
             currParticipants.RemoveAll(x => x.Session == e.Session);
 
             viewerControl = null;
-            
+
         }
 
 
-        private void MainWindow1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void RtcControl_UserJoinedMeeting(object sender, UserArgs e)
+        {
+            //the new peer session available event is fired 
+            //a peer joins your conference room or when you join the conference room
+            //and are not alone in the conference room
+            ProcessParticipants(e.Participants);
+        }
+
+        #endregion
+
+        #region Adorners
+        private void AttachLoadingAdorner(UIElement el, string textToDisplay, string session)
+        {
+            CustomAdorner textOverlay = new CustomAdorner(el);
+            textOverlay.FontSize = 15;
+            textOverlay.OverlayedText = textToDisplay;
+            textOverlay.Tag = session;
+            textOverlay.Typeface = new Typeface(FontFamily, FontStyles.Normal,
+                FontWeights.Bold, FontStretch);
+            AdornerLayer.GetAdornerLayer(el).Add(textOverlay);
+
+            if (adorners is null)
+            {
+                adorners = new List<CustomAdorner>();
+            }
+
+            adorners.Add(textOverlay);
+        }
+
+        private void RemoveAdorner(UIElement el, string session)
+        {
+            var adorner = adorners.Find(x => x.Tag.ToString() == session);
+            AdornerLayer.GetAdornerLayer(el).Remove(adorner);
+
+            adorners.Remove(adorner);
+        }
+        #endregion
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (rtcControl.MyMeeting != String.Empty)
             {
@@ -238,33 +285,10 @@ namespace AppRTCDemo
             rtcControl.JoinMeeting(model.UserName, model.MeetingID);
         }
 
-        private void WebRTCInitialized(object sender)
-        {
-            //you can add a turn server here
-            //rtcControl.AddIceServer(url: "numb.viagenie.ca", userName: "support@avspeed.com", password: "avspeedwebrtc", clearFirst: false, type: "turn");
-
-            model.WebRTCInitialized = true;
-            HideMessage();
-
-            rtcControl.SetMutePoster(Const.imageAway);
-
-            //rtcControl.AddIceServer("stun.voiparound.com");
-
-           //rtcControl.ShowDev();
-        }
-
-        void gridBigVideo_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        //void h_InConference(iConfRTC.Shared.ConferenceEventArgs e)
-        //{
-        //    ShowMessage((e.userName == model.UserName ? "You " : e.userName) + " joined " + e.conferenceId);
-        //    // MessageBox.Show("You (" + e.userName + ") have joined  conference  + e.conferenceId);
-        //    h.EnableOverlay("In conference : " + e.conferenceId, "position:absolute;bottom:0px;color:#FFF;text-align:center;font-size:20px;background-color:rgba(221,221,221,0.3);width:640px;padding:10px0;z-index:2147483647;font-family: Verdana, Geneva, sans-serif;", true);
-        //}
-
+       /// <summary>
+       /// This is where we go through each participant and setup a viewer which is another instance of the iConfRTC control
+       /// </summary>
+       /// <param name="participants">the list of participants of the meeting</param>
         private void ProcessParticipants( List<MeetingParticipants> participants)
         {
             foreach (var participant in participants)
@@ -302,7 +326,7 @@ namespace AppRTCDemo
                     currParticipants.Add(new CurrentParticipants { Session = participant.Session, UserName = participant.UserName, ElementPosition = elementPosition, Viewer = viewer });
 
                     MainWindow1.UpdateLayout();
-                    AttachLoadingAdorner(viewer, participant.UserName);
+                    AttachLoadingAdorner(viewer, participant.UserName, participant.Session);
 
 
                     ///only call webrtc functions when WebRTC is ready!!
@@ -319,14 +343,6 @@ namespace AppRTCDemo
                 }
             }
             
-        }
-
-        private void RtcControl_UserJoinedMeeting(object sender, UserArgs e)
-        {
-            //the new peer session available event is fired 
-            //a peer joins your conference room or when you join the conference room
-            //and are not alone in the conference room
-            ProcessParticipants(e.Participants);
         }
 
         private void txtMeetingID_KeyUp(object sender, KeyEventArgs e)
@@ -379,7 +395,7 @@ namespace AppRTCDemo
         {
             if (brush != null)
                 gridMessage.Background = brush;
-            else gridMessage.Background = System.Windows.Media.Brushes.Green;
+            else gridMessage.Background = Brushes.Green;
 
             gridMessage.Visibility = Visibility.Visible;
 
@@ -387,25 +403,21 @@ namespace AppRTCDemo
 
             lblMessage.Content  = message;
 
-            if (!stay)
+            if (stay) return;
+
+            var timer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(3000)};
+
+            timer.Tick += delegate (object s, EventArgs a)
             {
-                var _timer = new DispatcherTimer();
+                gridMessage.Visibility = Visibility.Hidden;
 
-                _timer.Interval = TimeSpan.FromMilliseconds(3000);
+                lblMessage.Content = String.Empty;
 
-                _timer.Tick += new EventHandler(delegate (object s, EventArgs a)
-                {
-                    gridMessage.Visibility = Visibility.Hidden;
+                timer.Stop();
+            };
 
-                    lblMessage.Content = String.Empty;
-
-                    _timer.Stop();
-                });
-
-                // Start the timer
-                _timer.Start();
-            }
-
+            // Start the timer
+            timer.Start();
         }
 
         /// <summary>
