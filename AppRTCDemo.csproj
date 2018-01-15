@@ -183,7 +183,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include=".travis.yml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

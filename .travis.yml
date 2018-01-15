@@ -1,4 +1,0 @@
-﻿language: csharp
-solution: AppRTCDemo.sln
-install:
-  - nuget restore AppRTCDemo.sln
