@@ -17,35 +17,24 @@ namespace AppRTCDemo.Model
         public bool AudioMuted { get; set; }
         public bool VideoMuted { get; set; }
 
-        public string _appTitle;
-        public string AppTitle
-        {
-            get { return _appTitle; }
-            set
-            {
-                _appTitle = value;
-                OnPropertyChanged("AppTitle");
-            }
-        }
-
         private Boolean _webrtcInitialized;
-        public Boolean WebRTCInitialized 
+        public Boolean WebRTCInitialized // here, underscore typo
         {
             get { return _webrtcInitialized; }
             set
             {
-                _webrtcInitialized = value; 
-                OnPropertyChanged("WebRTCInitialized"); 
+                _webrtcInitialized = value; // You miss this line, could be ok to do an equality check here to. :)
+                OnPropertyChanged("WebRTCInitialized"); // 
             }
         }
 
         private string _signalingUrl;
-        public string SignalingUrl 
+        public string SignalingUrl // here, underscore typo
         {
             get { return _signalingUrl; }
             set
             {
-                _signalingUrl = value; 
+                _signalingUrl = value; // You miss this line, could be ok to do an equality check here to. :)
                 OnPropertyChanged("SignalingUrl"); // 
             }
         }
@@ -53,24 +42,24 @@ namespace AppRTCDemo.Model
         private Boolean _showChat;
         
 
-        public Boolean ShowChat 
+        public Boolean ShowChat // here, underscore typo
         {
             get { return _showChat; }
             set
             {
-                _showChat = value; 
-                OnPropertyChanged("ShowChat"); 
+                _showChat = value; // You miss this line, could be ok to do an equality check here to. :)
+                OnPropertyChanged("ShowChat"); // 
             }
         }
 
         private Boolean _showSettings;
-        public Boolean ShowSettings 
+        public Boolean ShowSettings // here, underscore typo
         {
             get { return _showSettings; }
             set
             {
-                _showSettings = value; 
-                OnPropertyChanged("ShowSettings"); 
+                _showSettings = value; // You miss this line, could be ok to do an equality check here to. :)
+                OnPropertyChanged("ShowSettings"); // 
             }
         }
 

@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:AppRTCDemo"
         xmlns:properties="clr-namespace:AppRTCDemo.Properties"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="MainWindow1" mc:Ignorable="d" x:Class="AppRTCDemo.MainWindow"
-        Title="{Binding AppTitle}" Height="708.209" Width="830.97" Icon="resources/1437903597_integrated_webcam.png" Closing="MainWindow_Closing">
+        Title="AVSPEED iConfRTC Demo" Height="708.209" Width="1024" Icon="resources/1437903597_integrated_webcam.png" Closing="MainWindow1_Closing">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -47,13 +47,13 @@
                 </Grid.Style>
             </Grid>
 
-            <Grid x:Name="gridChat" Visibility="{Binding ShowChat, Converter={StaticResource BoolToVis}}" Panel.ZIndex="999999" HorizontalAlignment="Left" Height="214" Margin="30,285,0,0" VerticalAlignment="Top" Width="247" >
+            <Grid x:Name="gridChat" Visibility="{Binding ShowChat, Converter={StaticResource BoolToVis}}" Panel.ZIndex="999999" HorizontalAlignment="Left" Height="214" Margin="30,285,0,0" VerticalAlignment="Bottom" Width="247" >
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="tt"/>
                 </Grid.RenderTransform>
                 <DockPanel LastChildFill="True">
                     <TextBox Name="chatText" Height="26" TextWrapping="Wrap" Text="Type here" DockPanel.Dock="Bottom" VerticalAlignment="Top" BorderThickness="2" GotFocus="chatText_GotFocus" LostFocus="chatText_LostFocus" KeyUp="chatText_KeyUp"/>
-                    <TextBox x:Name="chatLog" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" Text="" Background="#FFF3F3F3" BorderThickness="2" IsReadOnly="True"/>
+                    <TextBox x:Name="chatLog" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" Text="" Background="White" BorderThickness="2" IsReadOnly="True" Margin="0,-40,0,-0.2"/>
                 </DockPanel>
             </Grid>
         </Grid>
@@ -135,7 +135,7 @@
 
         <Grid HorizontalAlignment="Stretch" Height="59"  VerticalAlignment="Top" Background="#FF214B87" Name="gridHead">
             <Label Content="AVSPEED iConfRTC Demo"  VerticalAlignment="Top" FontSize="29.333"  Foreground="White" HorizontalAlignment="Center"/>
-            <Image x:Name="imgSettings" Margin="0,0,14,7" Source="resources/settings2.png" Stretch="Fill" HorizontalAlignment="Right" VerticalAlignment="Center" Height="32" RenderTransformOrigin="-0.512,0" Width="32" Cursor="Hand" Visibility="Hidden"/>
+            <Image x:Name="imgSettings" Margin="0,0,14,7" Source="resources/settings2.png" Stretch="Fill" HorizontalAlignment="Right" VerticalAlignment="Center" Height="32" RenderTransformOrigin="-0.512,0" Width="32" Cursor="Hand"/>
         </Grid>
         <Grid HorizontalAlignment="Stretch" Panel.ZIndex="999999999" Height="59"  VerticalAlignment="Top" Background="#FF36992C" x:Name="gridMessage" Visibility="Hidden">
             <Label Name="lblMessage" Content="&#xD;&#xA;"  VerticalAlignment="Top" FontSize="29.333"  Foreground="White" HorizontalAlignment="Center"/>
