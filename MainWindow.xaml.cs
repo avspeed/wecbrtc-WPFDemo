@@ -28,7 +28,7 @@ namespace AppRTCDemo
 
         Feedback, comments
         Email us at : support@avspeed.com
-
+        or vist https://avspeed.com
  */
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -115,10 +115,11 @@ namespace AppRTCDemo
             ShowMessage("Welcome to Meeting : " + e.MeetingID, System.Windows.Media.Brushes.DarkSlateBlue, true);
 
             myAdorner = AttachLoadingAdorner(rtcControl, e.UserName);
-            
 
-            //start viewing sessions other than e.Session whcih is my session
+            //if you do not want to start the participant video right away remove this ..
+            rtcControl.StartVideo();
 
+            //start viewing sessions other than e.Session which is my session
             ProcessParticipants(e.Participants, e.Session, e.Sharing);
         }
 
@@ -194,8 +195,7 @@ namespace AppRTCDemo
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
-                throw;
+                Console.WriteLine(exception.Message);
             }
         }
 
@@ -263,7 +263,7 @@ namespace AppRTCDemo
 
             model.WebRTCInitialized = true;
             HideMessage();
-
+            rtcControl.ShowDev();
             // rtcControl.SetMutePoster(Const.imageAway);
 
             //rtcControl.AddIceServer("stun.voiparound.com");

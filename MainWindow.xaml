@@ -23,7 +23,7 @@
                 </Style>
             </Grid.Style>
             <WrapPanel Orientation="Horizontal" Name="videoList">
-                </WrapPanel>
+            </WrapPanel>
             <Grid x:Name="gridOptions"  Panel.ZIndex="999999" HorizontalAlignment="Left" Height="270" Margin="10,10,0,0" VerticalAlignment="Top" Width="100">
                 <Image Name="imgMuteAudio"   HorizontalAlignment="Left" Height="48" Margin="28,81,0,0" VerticalAlignment="Top" Width="48" Source="resources/microphone-48.png" Cursor="Hand"   ToolTip="Mute/Unmute mic"/>
                 <Image Name="imgMuteVideo"   HorizontalAlignment="Left" Height="48" Margin="28,10,0,0" VerticalAlignment="Top" Width="48" Source="resources/video-camera-48.png" Cursor="Hand"  ToolTip="Mute/Unmute camera"/>
@@ -69,7 +69,7 @@
                 <ColumnDefinition Width="78*"/>
                 <ColumnDefinition Width="86*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="txtMeetingID" IsEnabled="{Binding WebRTCInitialized}" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="200" KeyUp="txtMeetingID_KeyUp" Grid.ColumnSpan="3" FontSize="18.667" Margin="22,96,79,71"  Background="White" Grid.Column="1" MaxLength="25">
+            <TextBox x:Name="txtMeetingID" IsEnabled="{Binding WebRTCInitialized}" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="200" KeyUp="txtMeetingID_KeyUp" Grid.ColumnSpan="2" FontSize="18.667" Margin="73.8,29,15,138.6"  Background="White" Grid.Column="1" MaxLength="25">
                 <TextBox.Text>
                     <Binding Path="MeetingID" UpdateSourceTrigger="PropertyChanged" >
                         <Binding.ValidationRules>
@@ -95,7 +95,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <TextBox x:Name="txtUserName" IsEnabled="{Binding WebRTCInitialized}"  BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="200" KeyUp="txtMeetingID_KeyUp" Grid.ColumnSpan="3" FontSize="18.667" Margin="22,28,79,139"  Grid.Column="1" MaxLength="25">
+            <TextBox x:Name="txtUserName" IsEnabled="{Binding WebRTCInitialized}"  BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="200" KeyUp="txtMeetingID_KeyUp" Grid.ColumnSpan="2" FontSize="18.667" Margin="73.8,98,15,69.6"  Grid.Column="1" MaxLength="25">
 
 
 
@@ -110,8 +110,8 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <Label x:Name="label" Content="Your Name" Margin="122,28,0,0" VerticalAlignment="Top" FontSize="18.667" HorizontalAlignment="Left" Width="113" Grid.ColumnSpan="2"/>
-            <Label x:Name="label_Copy" Content="Meeting ID" HorizontalAlignment="Left" Margin="121,94,0,0" VerticalAlignment="Top" FontSize="18.667" Grid.ColumnSpan="2"/>
+            <Label x:Name="label" Content="Your Name" Margin="122,98,0,0" VerticalAlignment="Top" FontSize="18.667" HorizontalAlignment="Left" Width="113" Grid.ColumnSpan="2"/>
+            <Label x:Name="label_Copy" Content="Meeting ID" HorizontalAlignment="Left" Margin="122,32,0,0" VerticalAlignment="Top" FontSize="18.667" Grid.ColumnSpan="2"/>
         </Grid>
 
         <Grid x:Name="gridSettings" Visibility="{Binding ShowSettings, Converter={StaticResource BoolToVis}}" Panel.ZIndex="1" HorizontalAlignment="Right"  Height="131" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Margin="0,62,0,0" Width="517">
@@ -128,7 +128,7 @@
             </Grid.ColumnDefinitions>
             <TextBox x:Name="txtSignaling" Text="{Binding Source={x:Static properties:Settings.Default},
                                Path=SignalingUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="38" TextWrapping="Wrap" VerticalAlignment="Center" Width="384" Grid.ColumnSpan="4" FontSize="18.667" Margin="93,10,23,81"  Background="White">
-               
+
             </TextBox>
             <Label x:Name="lblSig" Content="Signaling Url" HorizontalAlignment="Left" Margin="-4,10,0,0" VerticalAlignment="Top" FontSize="16"/>
         </Grid>
