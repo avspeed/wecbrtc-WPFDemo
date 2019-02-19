@@ -96,11 +96,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="iConfRTCWPF, Version=1.0.1.26, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=x86">
-      <HintPath>packages\iConfRTC.WPF.X86.1.0.1.25\lib\iConfRTCWPF.dll</HintPath>
+    <Reference Include="iConfRTCWPF, Version=1.0.1.32, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=x86">
+      <HintPath>packages\iConfRTC.WPF.X86.1.0.1.31\lib\iConfRTCWPF.dll</HintPath>
     </Reference>
-    <Reference Include="RTC, Version=1.0.1.26, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=x86">
-      <HintPath>packages\iConfRTC.WPF.X86.1.0.1.25\lib\RTC.dll</HintPath>
+    <Reference Include="RTC, Version=1.0.1.32, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=x86">
+      <HintPath>packages\iConfRTC.WPF.X86.1.0.1.31\lib\RTC.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
