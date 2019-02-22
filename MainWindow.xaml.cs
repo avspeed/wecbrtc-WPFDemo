@@ -263,9 +263,14 @@ namespace AppRTCDemo
 
             model.WebRTCInitialized = true;
             HideMessage();
-            rtcControl.ShowDev();
-            // rtcControl.SetMutePoster(Const.imageAway);
-
+            //
+            //you can select your video device here for example by passing the identifying label or the Id for the device
+            //note that we have seen cases where device ids change, so the device id is not 100% reliable
+            //check the NewDevices event to capture the label and Id of the device
+            //
+            //sample code
+            //iconfRTC.SelectDevice("HD Pro Webcam C920 (046d:082d)", DeviceType.Video);
+            
             //rtcControl.AddIceServer("stun.voiparound.com");
         }
 
